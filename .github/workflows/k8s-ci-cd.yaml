@@ -1,17 +1,17 @@
 on:
   push:
-    branches: [ "123" ]
+    branches: [ "master" ]
 
 env:
-  NEXUS_REGISTRY: registry-new.devnerd.store # nexus repo for storing docker image 
-  IMAGE_NAME: spring-fileupload-image-nexus
+  # NEXUS_REGISTRY: registry-new.devnerd.store # nexus repo for storing docker image 
+  IMAGE_NAME: spring-image-uplaod
   # TAG: "v0.1.0" # version dynamic 
-  HELM_REPO: keoKAY/helm-sample-one.git
+  HELM_REPO: tochratana/gitops_repo_itp_gen1.git
   
 jobs:
   build-and-push:
     runs-on: ubuntu-latest 
-    environment: NEXUS_REPOSITORY
+    environment: DOCKER_ENV
     
     steps:
     - name: Checkout code
@@ -25,9 +25,9 @@ jobs:
         echo "Tag value is: ${{ env.TAG }}"
 
  
-    - name: Login to Nexus Registry
+    - name: Login to DockerHub Registry
       run: |
-        echo "${{ secrets.PASSWORD }}" | docker login ${{ env.NEXUS_REGISTRY }} -u ${{ secrets.USERNAME }} --password-stdin
+        echo "${{ secrets.PASSWORD }}" | docker login -u ${{ secrets.USERNAME }} --password-stdin
 
     # - name: Build Docker image
     #   run: docker build -t ${{ env.NEXUS_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} .
@@ -41,15 +41,16 @@ jobs:
         build-args: |
           APP_PORT=${{ env.APP_PORT }}
         tags: |
-          ${{ env.NEXUS_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+          ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
     - name: Push Docker image
       run: |
-        docker push ${{ env.NEXUS_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+        docker push ${{ secrets.username }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
     - name: Logout from Nexus Registry 
       if: always() # this ensure the logout runs even if the previous step fails. 
       run: |
-        docker logout ${{ env.NEXUS_REGISTRY }}
+        docker logout 
+
   update-helm-repo: 
     needs: build-and-push
     runs-on: ubuntu-latest 
