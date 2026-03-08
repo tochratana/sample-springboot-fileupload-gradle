@@ -81,8 +81,8 @@ jobs:
           cd helm-repo
 
           
-          yq -i ".image.repository=\"${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}\"" springboot-chart/values.yaml
-          yq -i ".image.tag=\"${{ env.TAG }}\"" springboot-chart/values.yaml
+          yq -i ".image.repository=\"${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}\"" spring-boot-chart/values.yaml
+          yq -i ".image.tag=\"${{ env.TAG }}\"" spring-boot-chart/values.yaml
 
           git config --global user.email "dummy@example.com"
           git config --global user.name "dummy_user"
