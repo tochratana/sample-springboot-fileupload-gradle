@@ -6,7 +6,7 @@ env:
   # NEXUS_REGISTRY: registry-new.devnerd.store # nexus repo for storing docker image 
   IMAGE_NAME: spring-image-uplaod
   # TAG: "v0.1.0" # version dynamic 
-  HELM_REPO: tochratana/gitops-spring-file-upload.git
+  HELM_REPO: tochratana/gitops-repo.git
   
 jobs:
   build-and-push:
